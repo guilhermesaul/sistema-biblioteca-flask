@@ -2,38 +2,56 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Sistema de Biblioteca{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h2>Sistema de Biblioteca</h2>
-        <nav>
-            <a href="{{ url_for('autores.listar_autores') }}">Autores</a> |
-            <a href="#">Livros</a> |
-            <a href="#">Leitores</a> |
-            <a href="#">Empréstimos</a>
-        </nav>
-        <hr>
+
+    <header class="cabecalho">
+        <div class="cabecalho-conteudo">
+            <h1 class="logo">&#128218; Sistema de Biblioteca</h1>
+            <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
+            <nav class="nav-principal" id="menuNav">
+                <a href="{{ url_for('autores.listar_autores') }}">Autores</a>
+                <a href="#">Livros</a>
+                <a href="#">Leitores</a>
+                <a href="#">Emprestimos</a>
+            </nav>
+        </div>
     </header>
 
-    <main>
+    <main class="conteudo-principal">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <ul>
+                <div class="alertas">
                     {% for category, message in messages %}
-                        <li><strong>{{ message }}</strong></li>
+                        <div class="alerta alerta-{{ category }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
-                </ul>
-                <hr>
+                </div>
             {% endif %}
         {% endwith %}
 
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <hr>
-        <p><small>Sistema de Biblioteca - PSI - Flask MVC + SQLAlchemy</small></p>
+    <footer class="rodape">
+        <p>&copy; 2026 Sistema de Biblioteca - PSI - Flask MVC + SQLAlchemy</p>
+        <p>Desenvolvido por: Guilherme, Joao Victor, Lucas Eduardo e Raissa</p>
     </footer>
+
+    <script>
+        function toggleMenu() {
+            var nav = document.getElementById('menuNav');
+            if (nav.classList.contains('nav-aberto')) {
+                nav.classList.remove('nav-aberto');
+            } else {
+                nav.classList.add('nav-aberto');
+            }
+        }
+    </script>
+
 </body>
 </html>
