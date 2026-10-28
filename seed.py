@@ -1,25 +1,15 @@
-"""
-seed.py - Populacao inicial do banco de dados com dados de teste
-Responsavel: Luciana (Lucas Eduardo)
-
-Uso: python seed.py
-Esse script cria o banco SQLite e insere autores, livros, leitores e emprestimos de exemplo.
-"""
-
 from app import create_app
 from database import db
 from models.autor import Autor
 from models.livro import Livro
 
 def limpar_banco():
-    """Remove todos os dados existentes para evitar duplicatas."""
     Livro.query.delete()
     Autor.query.delete()
     db.session.commit()
     print("Banco de dados limpo com sucesso.")
 
 def popular_autores():
-    """Insere autores de exemplo no banco."""
     autores_dados = [
         {
             "nome": "Machado de Assis",
@@ -63,7 +53,6 @@ def popular_autores():
     return lista_autores
 
 def popular_livros(autores):
-    """Insere livros de exemplo vinculados aos autores."""
     livros_dados = [
         {"titulo": "Dom Casmurro", "ano_publicacao": 1899, "genero": "Romance", "autor_idx": 0},
         {"titulo": "Memorias Postumas de Bras Cubas", "ano_publicacao": 1881, "genero": "Romance", "autor_idx": 0},
@@ -92,7 +81,6 @@ def popular_livros(autores):
     print(f"{contador} livros inseridos.")
 
 def executar_seed():
-    """Funcao principal que roda a populacao do banco."""
     print("=" * 50)
     print("Iniciando populacao do banco de dados...")
     print("=" * 50)
@@ -101,9 +89,6 @@ def executar_seed():
 
     autores = popular_autores()
     popular_livros(autores)
-
-    # Quando os models de Leitor e Emprestimo forem criados pelo Rafael,
-    # as funcoes de seed para essas entidades serao adicionadas aqui.
 
     print("=" * 50)
     print("Banco de dados populado com sucesso!")
