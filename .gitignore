@@ -1,0 +1,23 @@
+# Ambiente virtual Python
+venv/
+.venv/
+env/
+ENV/
+
+# Byte-code Python e caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Banco de dados SQLite local (conforme exigência do projeto)
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
