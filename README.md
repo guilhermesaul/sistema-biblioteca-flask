@@ -117,4 +117,11 @@ sistema-biblioteca-flask/
 > Declaro que desenvolvi este projeto compreendendo o codigo entregue e que sou capaz de explicar e modificar suas partes principais.
 >
 > **Uso de IA:**
-> - [x] Nao utilizei IA generativa.
+> - [ ] Nao utilizei IA generativa.
+> - [x] Utilizei IA generativa e descrevo abaixo onde e como foi utilizada.
+>
+> **Descricao do uso:**
+> A IA generativa foi utilizada parcialmente como ferramenta de apoio para:
+> - Correcao de pequenos bugs no codigo;
+> - Esclarecimento de duvidas sobre Flask e SQLAlchemy;
+> - Auxilio na elaboracao e formatacao da documentacao (`README.md` e `DIARIO.md`).
