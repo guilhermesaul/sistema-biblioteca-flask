@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Sistema de Biblioteca{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h2>Sistema de Biblioteca</h2>
+        <nav>
+            <a href="{{ url_for('autores.listar_autores') }}">Autores</a> |
+            <a href="#">Livros</a> |
+            <a href="#">Leitores</a> |
+            <a href="#">Empréstimos</a>
+        </nav>
+        <hr>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul>
+                    {% for category, message in messages %}
+                        <li><strong>{{ message }}</strong></li>
+                    {% endfor %}
+                </ul>
+                <hr>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p><small>Sistema de Biblioteca - PSI - Flask MVC + SQLAlchemy</small></p>
+    </footer>
+</body>
+</html>
