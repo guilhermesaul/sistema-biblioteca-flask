@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if autor %}Editar Autor{% else %}Novo Autor{% endif %} - Sistema de Biblioteca
+{% endblock %}
+
+{% block content %}
+<h1>{% if autor %}Editar Autor{% else %}Cadastrar Novo Autor{% endif %}</h1>
+<p><a href="{{ url_for('autores.listar_autores') }}">Voltar para a lista</a></p>
+
+<form method="POST">
+    <p>
+        <label for="nome">Nome: *</label><br>
+        <input type="text" id="nome" name="nome" value="{{ autor.nome if autor else '' }}" required>
+    </p>
+
+    <p>
+        <label for="nacionalidade">Nacionalidade:</label><br>
+        <input type="text" id="nacionalidade" name="nacionalidade" value="{{ autor.nacionalidade if autor else '' }}">
+    </p>
+
+    <p>
+        <label for="biografia">Biografia:</label><br>
+        <textarea id="biografia" name="biografia" rows="4" cols="50">{{ autor.biografia if autor else '' }}</textarea>
+    </p>
+
+    <p>
+        <button type="submit">{% if autor %}Salvar Alterações{% else %}Cadastrar{% endif %}</button>
+        <a href="{{ url_for('autores.listar_autores') }}">Cancelar</a>
+    </p>
+</form>
+{% endblock %}

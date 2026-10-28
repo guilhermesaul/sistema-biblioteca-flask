@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ autor.nome }} - Detalhes do Autor{% endblock %}
+
+{% block content %}
+<h1>Detalhes do Autor</h1>
+<p>
+    <a href="{{ url_for('autores.editar_autor', id=autor.id) }}">Editar</a> |
+    <a href="{{ url_for('autores.listar_autores') }}">Voltar para a lista</a>
+</p>
+
+<div>
+    <p><strong>ID:</strong> {{ autor.id }}</p>
+    <p><strong>Nome:</strong> {{ autor.nome }}</p>
+    <p><strong>Nacionalidade:</strong> {{ autor.nacionalidade or 'Não informada' }}</p>
+    <p><strong>Biografia:</strong> {{ autor.biografia or 'Nenhuma biografia informada.' }}</p>
+</div>
+
+<hr>
+
+<!-- Relacionamento 1:N (Um Autor possui vários Livros) -->
+<h2>Livros deste Autor (Relacionamento 1:N)</h2>
+
+{% if autor.livros %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Gênero</th>
+                <th>Ano de Publicação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livro in autor.livros %}
+                <tr>
+                    <td>{{ livro.id }}</td>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.genero or 'Não informado' }}</td>
+                    <td>{{ livro.ano_publicacao or 'Não informado' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nenhum livro cadastrado para este autor ainda.</p>
+{% endif %}
+
+<br>
+<form action="{{ url_for('autores.excluir_autor', id=autor.id) }}" method="POST" onsubmit="return confirm('Deseja excluir este autor e seus livros vinculados?');">
+    <button type="submit">Excluir este Autor</button>
+</form>
+{% endblock %}
