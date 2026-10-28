@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Livros - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<h1>Gerenciamento de Livros</h1>
+<p><a href="{{ url_for('livros.cadastrar_livro') }}">+ Cadastrar Novo Livro</a></p>
+
+{% if livros %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor (1:N)</th>
+                <th>Gênero</th>
+                <th>Ano</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.id }}</td>
+                    <td>
+                        <a href="{{ url_for('livros.detalhes_livro', id=livro.id) }}">
+                            {{ livro.titulo }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('autores.detalhes_autor', id=livro.autor.id) }}">
+                            {{ livro.autor.nome }}
+                        </a>
+                    </td>
+                    <td>{{ livro.genero or 'Não informado' }}</td>
+                    <td>{{ livro.ano_publicacao or 'Não informado' }}</td>
+                    <td>
+                        <a href="{{ url_for('livros.detalhes_livro', id=livro.id) }}">Ver</a> |
+                        <a href="{{ url_for('livros.editar_livro', id=livro.id) }}">Editar</a> |
+                        <form action="{{ url_for('livros.excluir_livro', id=livro.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja excluir este livro?');">
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nenhum livro cadastrado até o momento.</p>
+{% endif %}
+{% endblock %}

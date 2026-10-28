@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ livro.titulo }} - Detalhes do Livro{% endblock %}
+
+{% block content %}
+<h1>Detalhes do Livro</h1>
+<p>
+    <a href="{{ url_for('livros.editar_livro', id=livro.id) }}">Editar</a> |
+    <a href="{{ url_for('livros.listar_livros') }}">Voltar para a lista</a>
+</p>
+
+<div>
+    <p><strong>ID:</strong> {{ livro.id }}</p>
+    <p><strong>Título:</strong> {{ livro.titulo }}</p>
+    <p><strong>Gênero:</strong> {{ livro.genero or 'Não informado' }}</p>
+    <p><strong>Ano de Publicação:</strong> {{ livro.ano_publicacao or 'Não informado' }}</p>
+    <p>
+        <strong>Autor (Relacionamento 1:N):</strong>
+        <a href="{{ url_for('autores.detalhes_autor', id=livro.autor.id) }}">
+            {{ livro.autor.nome }}
+        </a>
+    </p>
+</div>
+
+<hr>
+
+<h2>Leitores com este Livro (Relacionamento N:N)</h2>
+{% if livro.emprestimos %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Leitor</th>
+                <th>Data do Empréstimo</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in livro.emprestimos %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('leitores.detalhes_leitor', id=emp.leitor.id) }}">
+                            {{ emp.leitor.nome }}
+                        </a>
+                    </td>
+                    <td>{{ emp.data_emprestimo.strftime('%d/%m/%Y') if emp.data_emprestimo else '-' }}</td>
+                    <td>{{ emp.status }}</td>
+                    <td>
+                        <form action="{{ url_for('emprestimos.devolver_emprestimo', id=emp.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja devolver este livro?');">
+                            <button type="submit">Devolver</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nenhum empréstimo ativo para este livro no momento.</p>
+{% endif %}
+
+<br>
+<form action="{{ url_for('livros.excluir_livro', id=livro.id) }}" method="POST" onsubmit="return confirm('Deseja excluir este livro?');">
+    <button type="submit">Excluir este Livro</button>
+</form>
+{% endblock %}

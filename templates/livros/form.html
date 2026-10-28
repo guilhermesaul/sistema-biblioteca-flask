@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if livro %}Editar Livro{% else %}Novo Livro{% endif %} - Sistema de Biblioteca
+{% endblock %}
+
+{% block content %}
+<h1>{% if livro %}Editar Livro{% else %}Cadastrar Novo Livro{% endif %}</h1>
+<p><a href="{{ url_for('livros.listar_livros') }}">Voltar para a lista</a></p>
+
+<form method="POST">
+    <p>
+        <label for="titulo">Título: *</label><br>
+        <input type="text" id="titulo" name="titulo" value="{{ livro.titulo if livro else '' }}" required>
+    </p>
+
+    <p>
+        <label for="autor_id">Autor (Relacionamento 1:N): *</label><br>
+        <select id="autor_id" name="autor_id" required>
+            <option value="">-- Selecione o Autor --</option>
+            {% for autor in autores %}
+                <option value="{{ autor.id }}" {% if livro and livro.autor_id == autor.id %}selected{% endif %}>
+                    {{ autor.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        <label for="genero">Gênero:</label><br>
+        <input type="text" id="genero" name="genero" value="{{ livro.genero if livro else '' }}">
+    </p>
+
+    <p>
+        <label for="ano_publicacao">Ano de Publicação:</label><br>
+        <input type="number" id="ano_publicacao" name="ano_publicacao" value="{{ livro.ano_publicacao if livro else '' }}">
+    </p>
+
+    <p>
+        <button type="submit">{% if livro %}Salvar Alterações{% else %}Cadastrar{% endif %}</button>
+        <a href="{{ url_for('livros.listar_livros') }}">Cancelar</a>
+    </p>
+</form>
+{% endblock %}
