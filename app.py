@@ -18,13 +18,22 @@ def create_app():
     from controllers.autor_controller import autor_bp
     app.register_blueprint(autor_bp, url_prefix='/autores')
 
+    from controllers.livro_controller import livro_bp
+    app.register_blueprint(livro_bp, url_prefix='/livros')
+
+    from controllers.leitor_controller import leitor_bp
+    app.register_blueprint(leitor_bp, url_prefix='/leitores')
+
+    from controllers.emprestimo_controller import emprestimo_bp
+    app.register_blueprint(emprestimo_bp, url_prefix='/emprestimos')
+
     @app.route('/')
     def index():
         return redirect(url_for('autores.listar_autores'))
 
     with app.app_context():
         # Importa os models para garantir que sejam registrados antes de criar as tabelas
-        from models import autor
+        from models import autor, livro, leitor, emprestimo
         db.create_all()
 
     return app
