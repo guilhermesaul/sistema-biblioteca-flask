@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Leitores - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<h1>Gerenciamento de Leitores</h1>
+<p><a href="{{ url_for('leitores.cadastrar_leitor') }}">+ Cadastrar Novo Leitor</a></p>
+
+{% if leitores %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+                <th>Livros Emprestados (N:N)</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for leitor in leitores %}
+                <tr>
+                    <td>{{ leitor.id }}</td>
+                    <td>
+                        <a href="{{ url_for('leitores.detalhes_leitor', id=leitor.id) }}">
+                            {{ leitor.nome }}
+                        </a>
+                    </td>
+                    <td>{{ leitor.email }}</td>
+                    <td>{{ leitor.telefone or 'Não informado' }}</td>
+                    <td>{{ leitor.emprestimos|length }} livro(s)</td>
+                    <td>
+                        <a href="{{ url_for('leitores.detalhes_leitor', id=leitor.id) }}">Ver</a> |
+                        <a href="{{ url_for('leitores.editar_leitor', id=leitor.id) }}">Editar</a> |
+                        <form action="{{ url_for('leitores.excluir_leitor', id=leitor.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja excluir este leitor? Seus empréstimos também serão removidos.');">
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nenhum leitor cadastrado até o momento.</p>
+{% endif %}
+{% endblock %}

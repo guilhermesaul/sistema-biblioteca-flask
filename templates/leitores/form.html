@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if leitor %}Editar Leitor{% else %}Novo Leitor{% endif %} - Sistema de Biblioteca
+{% endblock %}
+
+{% block content %}
+<h1>{% if leitor %}Editar Leitor{% else %}Cadastrar Novo Leitor{% endif %}</h1>
+<p><a href="{{ url_for('leitores.listar_leitores') }}">Voltar para a lista</a></p>
+
+<form method="POST">
+    <p>
+        <label for="nome">Nome: *</label><br>
+        <input type="text" id="nome" name="nome" value="{{ leitor.nome if leitor else '' }}" required>
+    </p>
+
+    <p>
+        <label for="email">E-mail: *</label><br>
+        <input type="email" id="email" name="email" value="{{ leitor.email if leitor else '' }}" required>
+    </p>
+
+    <p>
+        <label for="telefone">Telefone:</label><br>
+        <input type="text" id="telefone" name="telefone" value="{{ leitor.telefone if leitor else '' }}" placeholder="(84) 99999-9999">
+    </p>
+
+    <p>
+        <button type="submit">{% if leitor %}Salvar Alterações{% else %}Cadastrar{% endif %}</button>
+        <a href="{{ url_for('leitores.listar_leitores') }}">Cancelar</a>
+    </p>
+</form>
+{% endblock %}

@@ -14,9 +14,9 @@
             <button class="menu-toggle" onclick="toggleMenu()">&#9776;</button>
             <nav class="nav-principal" id="menuNav">
                 <a href="{{ url_for('autores.listar_autores') }}">Autores</a>
-                <a href="#">Livros</a>
-                <a href="#">Leitores</a>
-                <a href="#">Emprestimos</a>
+                <a href="{{ url_for('livros.listar_livros') }}">Livros</a>
+                <a href="{{ url_for('leitores.listar_leitores') }}">Leitores</a>
+                <a href="{{ url_for('emprestimos.listar_emprestimos') }}">Empréstimos</a>
             </nav>
         </div>
     </header>

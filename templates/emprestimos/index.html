@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Empréstimos - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<h1>Gerenciamento de Empréstimos (Relacionamento N:N)</h1>
+<p>
+    <a href="{{ url_for('emprestimos.cadastrar_emprestimo') }}">+ Registrar Novo Empréstimo</a>
+</p>
+
+<!-- Consulta Bidirecional: Leitores por Livro -->
+<div style="background-color: #f8f9fa; border: 1px solid #dcdcdc; border-radius: 6px; padding: 16px; margin-bottom: 25px;">
+    <h2 style="margin-top: 0;">Consulta Bidirecional: Leitores por Livro (Sentido 2 do N:N)</h2>
+    <p>Selecione um livro para visualizar todos os leitores que o pegaram emprestado:</p>
+    <form method="GET" action="" id="formConsultaLivro" onsubmit="event.preventDefault(); irParaLivro();">
+        <label for="selectLivroConsulta"><strong>Escolha o Livro:</strong></label>
+        <select id="selectLivroConsulta" style="margin: 0 10px; padding: 6px;">
+            <option value="">-- Selecione um Livro --</option>
+            {% for livro in livros %}
+                <option value="{{ livro.id }}">{{ livro.titulo }} ({{ livro.emprestimos|length }} leitor(es))</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Consultar Leitores</button>
+    </form>
+</div>
+
+<h2>Empréstimos Ativos no Sistema</h2>
+{% if emprestimos %}
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Leitor (Entidade 1)</th>
+                <th>Livro Emprestado (Entidade 2)</th>
+                <th>Autor do Livro (1:N)</th>
+                <th>Data do Empréstimo</th>
+                <th>Status</th>
+                <th>Ações (Remover Vínculo N:N)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in emprestimos %}
+                <tr>
+                    <td>{{ emp.id }}</td>
+                    <td>
+                        <a href="{{ url_for('leitores.detalhes_leitor', id=emp.leitor.id) }}">
+                            {{ emp.leitor.nome }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('livros.detalhes_livro', id=emp.livro.id) }}">
+                            {{ emp.livro.titulo }}
+                        </a>
+                    </td>
+                    <td>{{ emp.livro.autor.nome }}</td>
+                    <td>{{ emp.data_emprestimo.strftime('%d/%m/%Y') if emp.data_emprestimo else '-' }}</td>
+                    <td>{{ emp.status }}</td>
+                    <td>
+                        <form action="{{ url_for('emprestimos.devolver_emprestimo', id=emp.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Deseja registrar a devolução deste livro?');">
+                            <input type="hidden" name="origem" value="emprestimos">
+                            <button type="submit">Devolver Livro</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Nenhum empréstimo ativo no momento.</p>
+{% endif %}
+
+<script>
+    function irParaLivro() {
+        var select = document.getElementById('selectLivroConsulta');
+        var livroId = select.value;
+        if (livroId) {
+            window.location.href = "{{ url_for('emprestimos.listar_emprestimos') }}livro/" + livroId;
+        } else {
+            alert('Por favor, selecione um livro.');
+        }
+    }
+</script>
+{% endblock %}

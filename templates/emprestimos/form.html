@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Novo Empréstimo - Sistema de Biblioteca{% endblock %}
+
+{% block content %}
+<h1>Registrar Empréstimo de Livro (Relacionamento N:N)</h1>
+<p><a href="{{ url_for('emprestimos.listar_emprestimos') }}">Voltar para a lista</a></p>
+
+<form method="POST">
+    <p>
+        <label for="leitor_id">Leitor: *</label><br>
+        <select id="leitor_id" name="leitor_id" required>
+            <option value="">-- Selecione o Leitor --</option>
+            {% for leitor in leitores %}
+                <option value="{{ leitor.id }}" {% if leitor_id_selecionado == leitor.id %}selected{% endif %}>
+                    {{ leitor.nome }} ({{ leitor.email }})
+                </option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        <label for="livro_id">Livro: *</label><br>
+        <select id="livro_id" name="livro_id" required>
+            <option value="">-- Selecione o Livro --</option>
+            {% for livro in livros %}
+                <option value="{{ livro.id }}">
+                    {{ livro.titulo }} — {{ livro.autor.nome }}
+                </option>
+            {% endfor %}
+        </select>
+    </p>
+
+    <p>
+        <label for="data_emprestimo">Data do Empréstimo:</label><br>
+        <input type="date" id="data_emprestimo" name="data_emprestimo">
+    </p>
+
+    <p>
+        <button type="submit">Confirmar Empréstimo (Criar Vínculo N:N)</button>
+        <a href="{{ url_for('emprestimos.listar_emprestimos') }}">Cancelar</a>
+    </p>
+</form>
+{% endblock %}
