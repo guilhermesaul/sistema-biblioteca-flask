@@ -20,22 +20,33 @@ Sistema de Biblioteca — permite gerenciar autores, livros, leitores e empresti
 O sistema permite:
 - Cadastrar, listar, editar e excluir **Autores**
 - Cadastrar, listar, editar e excluir **Livros** vinculados a autores
-- Cadastrar, listar, editar e excluir **Leitores** *(em desenvolvimento)*
-- Registrar e gerenciar **Emprestimos** de livros para leitores *(em desenvolvimento)*
+- Cadastrar, listar, editar e excluir **Leitores**
+- Registrar e gerenciar **Emprestimos** de livros para leitores
+- Visualizar listagem bidirecional do relacionamento N:N:
+  - Livros emprestados por um determinado leitor
+  - Leitores que pegaram um determinado livro emprestado
+- Remover vinculos de emprestimo (devolucao de livros)
 
 ## Entidades
 
 1. **Autor** — possui id, nome, nacionalidade e biografia
 2. **Livro** — possui id, titulo, ano de publicacao, genero e vinculo com autor
-3. **Leitor** — possui id, nome, email e telefone *(em desenvolvimento)*
+3. **Leitor** — possui id, nome, email e telefone
+4. **Emprestimo (Tabela Intermediaria N:N)** — possui id, leitor_id, livro_id, data_emprestimo, data_devolucao e status
 
 ## Relacionamentos
 
 ### Relacionamento 1:N (Um para Muitos)
-Um **Autor** possui varios **Livros**. Cada livro pertence a exatamente um autor. Implementado com `ForeignKey` na tabela de livros apontando para a tabela de autores e `relationship()` no model Autor.
+Um **Autor** possui varios **Livros**. Cada livro pertence a exatamente um autor. Implementado com `ForeignKey('autores.id')` na tabela de livros e `relationship()` no model Autor com cascade delete.
 
 ### Relacionamento N:N (Muitos para Muitos)
-**Leitores** emprestam varios **Livros**, e um livro pode ser emprestado por varios leitores. Sera implementado com uma tabela intermediaria de Emprestimos. *(Em desenvolvimento pelo integrante responsavel)*
+**Leitores** emprestam varios **Livros**, e um livro pode ser emprestado por varios leitores ao longo do tempo. Implementado atraves da tabela/model intermediaria `Emprestimo` vinculando `leitor_id` e `livro_id`.
+O sistema contempla todos os requisitos do N:N:
+1. Criacao de vinculos atraves da tela de registro de emprestimo;
+2. Remocao de vinculos atraves da devolucao de livros;
+3. Listagem bidirecional:
+   - Na pagina de detalhes do leitor sao exibidos todos os livros emprestados por ele;
+   - Na pagina de emprestimos e possivel consultar, para qualquer livro, todos os leitores que o pegaram.
 
 ## Tecnologias Utilizadas
 
@@ -43,7 +54,7 @@ Um **Autor** possui varios **Livros**. Cada livro pertence a exatamente um autor
 - Flask
 - Flask-SQLAlchemy
 - SQLite
-- HTML / CSS
+- HTML5 / CSS3
 - Jinja2
 
 ## Como Executar
@@ -91,25 +102,42 @@ sistema-biblioteca-flask/
     models/
         __init__.py
         autor.py            # Model Autor (1:N com Livro)
-        livro.py            # Model Livro (FK para Autor)
+        livro.py            # Model Livro (FK para Autor, N:N com Leitor)
+        leitor.py           # Model Leitor (N:N com Livro)
+        emprestimo.py       # Model Emprestimo (Tabela intermediaria N:N)
     controllers/
         __init__.py
-        autor_controller.py # Rotas CRUD de Autor
+        autor_controller.py      # Rotas CRUD de Autor
+        livro_controller.py      # Rotas CRUD de Livro
+        leitor_controller.py     # Rotas CRUD de Leitor
+        emprestimo_controller.py # Rotas de concessao, devolucao e consulta N:N
     templates/
         base.html           # Layout base com menu e rodape
         autores/
             index.html      # Listagem de autores
-            form.html       # Formulario de cadastro/edicao
-            detalhes.html   # Detalhes do autor e livros (1:N)
+            form.html       # Formulario de autor
+            detalhes.html   # Detalhes do autor e seus livros (1:N)
+        livros/
+            index.html      # Listagem de livros
+            form.html       # Formulario de livro com select de autor
+            detalhes.html   # Detalhes do livro e leitores (N:N)
+        leitores/
+            index.html      # Listagem de leitores
+            form.html       # Formulario de leitor
+            detalhes.html   # Detalhes do leitor e seus livros emprestados (N:N)
+        emprestimos/
+            index.html      # Painel de emprestimos ativos e consulta bidirecional
+            form.html       # Formulario para conceder emprestimo (vincular N:N)
+            livro_leitores.html # Consulta de leitores de um determinado livro (N:N)
     static/
-        style.css           # Estilizacao das paginas
+        style.css           # Estilizacao unificada das paginas
 ```
 
 ## Dificuldades Encontradas
 
-- Configurar o ambiente Flask para funcionar corretamente com SQLAlchemy e o banco SQLite
-- Organizar a estrutura MVC separando responsabilidades entre models, controllers e templates
-- Garantir que o CSS fique responsivo e padronizado em todas as telas
+- Modelagem e estruturacao da tabela intermediaria do relacionamento N:N mantendo atributos adicionais e navegacao bidirecional
+- Padronizacao visual entre todas as telas MVC mantendo responsividade sem dependencias externas de CSS
+- Garantir a integridade referencial nas operacoes de criacao e remocao de vinculos entre as quatro entidades
 
 ## Declaracao de Autoria
 

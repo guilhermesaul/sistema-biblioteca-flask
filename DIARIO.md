@@ -43,6 +43,13 @@
 - **Como resolvi:** Consultei a documentacao do SQLAlchemy sobre ForeignKey e relationship.
 - **Proximo passo:** Completar o CRUD de livros e criar os templates.
 
+### Registro 2
+- **Data:** 28/10/2026
+- **O que foi feito:** Implementacao completa do controller livro_controller.py com CRUD (listar, cadastrar, editar, excluir, detalhes), criacao dos templates de livros com selecao dinamica de autores e integracao do relacionamento 1:N.
+- **Dificuldade encontrada:** Fazer o dropdown de autores carregar dinamicamente na tela de criacao e edicao do livro mantendo o autor selecionado.
+- **Como resolvi:** Passei a lista de autores na renderizacao do template e usei Jinja para comparar o autor_id atual com o autor do loop.
+- **Proximo passo:** Apoiar a integracao do relacionamento N:N com os Leitores e Emprestimos.
+
 ---
 
 ## Lucas Eduardo da Silva
@@ -79,6 +86,32 @@
 
 ## Raissa Raquel da Silva Costa
 
-*(Registros serao adicionados conforme o desenvolvimento da parte de Leitores e Emprestimos)*
+### Registro 1
+- **Data:** 24/10/2026
+- **O que foi feito:** Definicao dos modelos de dados para Leitor e para a tabela intermediaria de Emprestimo, estabelecendo as chaves estrangeiras leitor_id e livro_id e mapeamento N:N.
+- **Dificuldade encontrada:** Modelar a tabela intermediaria com atributos adicionais como data_emprestimo e status sem quebrar a consulta direta do relacionamento.
+- **Como resolvi:** Criei o model Emprestimo mapeando a tabela intermediaria e relacionei com Leitor e Livro usando back_populates e secondary='emprestimos'.
+- **Proximo passo:** Criar os controllers com as rotas de gerenciamento de Leitores e operacoes de Emprestimo.
+
+### Registro 2
+- **Data:** 28/10/2026
+- **O que foi feito:** Criacao dos controllers leitor_controller.py (CRUD de Leitor) e emprestimo_controller.py com rotas para conceder emprestimo (criar vinculo N:N) e devolver livro (remover vinculo N:N).
+- **Dificuldade encontrada:** Garantir que um leitor nao pegue o mesmo livro duplicado caso o emprestimo anterior ainda esteja ativo.
+- **Como resolvi:** Adicionei uma verificacao antes do commit para checar se ja existia emprestimo ativo com a combinacao leitor_id e livro_id.
+- **Proximo passo:** Criar as interfaces HTML com Jinja2 para Leitores e Emprestimos.
+
+### Registro 3
+- **Data:** 30/10/2026
+- **O que foi feito:** Criacao dos templates de leitores (index, form, detalhes) e emprestimos (index, form e tela de consulta bidirecional de leitores por livro).
+- **Dificuldade encontrada:** Implementar a navegacao bidirecional entre Leitores e Livros de forma clara para o usuario.
+- **Como resolvi:** Na tela de detalhes do Leitor exibo todos os livros emprestados por ele, e na tela de Emprestimos adicionei consulta para dado um livro exibir todos os leitores que o pegaram.
+- **Proximo passo:** Atualizar o seed.py com dados de leitores e emprestimos e realizar testes finais do fluxo completo.
+
+### Registro 4
+- **Data:** 31/10/2026
+- **O que foi feito:** Atualizacao do seed.py com populacao automatica de leitores e emprestimos de exemplo, testes de criacao e remocao de vinculos na interface e revisao da documentacao.
+- **Dificuldade encontrada:** Testar o cascade de exclusao para garantir integridade quando um leitor ou livro e excluido.
+- **Como resolvi:** Configurei cascade='all, delete-orphan' nos relacionamentos e testei a exclusao pelo navegador, confirmando que os registros orfaos sao removidos.
+- **Proximo passo:** Projeto finalizado com sucesso e pronto para apresentacao e defesa oral.
 
 ---
